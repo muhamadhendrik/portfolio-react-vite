@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, Github, Linkedin } from 'lucide-react';
 import { useState } from 'react';
+import { useProfile } from '../../hooks/useProfile';
+import { contactService } from '../../services/contactService';
 
 const Contact = () => {
+  const { profile } = useProfile();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,19 +14,23 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setIsSubmitting(false);
-    setSubmitted(true);
-    setFormData({ name: '', email: '', subject: '', message: '' });
-
-    setTimeout(() => setSubmitted(false), 3000);
+    try {
+      await contactService.submitContact(formData);
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setSubmitted(false), 3000);
+    } catch (err) {
+      setError('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -37,26 +44,26 @@ const Contact = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'hello@muhamadhendrik.dev',
-      href: 'mailto:hello@muhamadhendrik.dev',
+      value: profile?.email || 'hello@muhamadhendrik.dev',
+      href: `mailto:${profile?.email || 'hello@muhamadhendrik.dev'}`,
     },
     {
       icon: Phone,
       label: 'Phone',
-      value: '+62 812 3456 7890',
-      href: 'tel:+6281234567890',
+      value: profile?.phone || '+62 812 3456 7890',
+      href: `tel:${profile?.phone || '+6281234567890'}`,
     },
     {
       icon: MapPin,
       label: 'Location',
-      value: 'Jakarta, Indonesia',
+      value: profile?.location || 'Jakarta, Indonesia',
       href: '#',
     },
   ];
 
   const socialLinks = [
-    { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Github, href: profile?.github_url || '#', label: 'GitHub' },
+    { icon: Linkedin, href: profile?.linkedin_url || '#', label: 'LinkedIn' },
   ];
 
   const containerVariants = {
@@ -79,24 +86,24 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="relative py-20">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold mb-4">
+          <motion.h2 variants={itemVariants} className="mb-4 text-4xl font-bold md:text-5xl">
             Get In <span className="gradient-text">Touch</span>
           </motion.h2>
-          <motion.p variants={itemVariants} className="text-gray-400 max-w-2xl mx-auto">
+          <motion.p variants={itemVariants} className="max-w-2xl mx-auto text-gray-400">
             Have a project in mind or just want to chat? Feel free to reach out!
           </motion.p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid gap-12 lg:grid-cols-2">
           {/* Contact Info */}
           <motion.div
             variants={containerVariants}
@@ -106,8 +113,8 @@ const Contact = () => {
             className="space-y-8"
           >
             <motion.div variants={itemVariants}>
-              <h3 className="text-2xl font-bold mb-6">Let's Connect</h3>
-              <p className="text-gray-400 mb-8">
+              <h3 className="mb-6 text-2xl font-bold">Let's Connect</h3>
+              <p className="mb-8 text-gray-400">
                 I'm always open to discussing new projects, creative ideas, or opportunities
                 to be part of your vision. Drop me a message and I'll get back to you ASAP!
               </p>
@@ -119,21 +126,21 @@ const Contact = () => {
                   key={info.label}
                   href={info.href}
                   whileHover={{ x: 10 }}
-                  className="flex items-center gap-4 p-4 glass-card hover:bg-white/10 transition-colors group"
+                  className="flex items-center gap-4 p-4 transition-colors glass-card hover:bg-white/10 group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <info.icon size={20} className="text-primary" />
+                  <div className="flex items-center justify-center w-12 h-12 transition-transform rounded-full bg-gradient-to-br from-primary-color/20 to-secondary-color/20 group-hover:scale-110">
+                    <info.icon size={20} className="text-white" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">{info.label}</p>
-                    <p className="text-white font-medium">{info.value}</p>
+                    <p className="font-medium text-white">{info.value}</p>
                   </div>
                 </motion.a>
               ))}
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <h4 className="text-lg font-semibold mb-4">Follow Me</h4>
+              <h4 className="mb-4 text-lg font-semibold">Follow Me</h4>
               <div className="flex gap-4">
                 {socialLinks.map((social) => (
                   <motion.a
@@ -141,7 +148,7 @@ const Contact = () => {
                     href={social.href}
                     whileHover={{ scale: 1.2, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
-                    className="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-colors"
+                    className="flex items-center justify-center w-12 h-12 transition-colors rounded-full glass-card hover:bg-white/10"
                     aria-label={social.label}
                   >
                     <social.icon size={20} />
@@ -157,14 +164,14 @@ const Contact = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="glass-card p-8"
+            className="p-8 glass-card"
           >
-            <motion.h3 variants={itemVariants} className="text-2xl font-bold mb-6">
+            <motion.h3 variants={itemVariants} className="mb-6 text-2xl font-bold">
               Send a Message
             </motion.h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <motion.div variants={itemVariants}>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
+                <label htmlFor="name" className="block mb-2 text-sm font-medium">
                   Name
                 </label>
                 <input
@@ -174,13 +181,13 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-4 py-3 transition-colors border rounded-lg bg-white/5 border-white/10 focus:outline-none focus:border-primary"
                   placeholder="John Doe"
                 />
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                <label htmlFor="email" className="block mb-2 text-sm font-medium">
                   Email
                 </label>
                 <input
@@ -190,13 +197,13 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-4 py-3 transition-colors border rounded-lg bg-white/5 border-white/10 focus:outline-none focus:border-primary"
                   placeholder="john@example.com"
                 />
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                <label htmlFor="subject" className="block mb-2 text-sm font-medium">
                   Subject
                 </label>
                 <input
@@ -205,14 +212,13 @@ const Contact = () => {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-4 py-3 transition-colors border rounded-lg bg-white/5 border-white/10 focus:outline-none focus:border-primary"
                   placeholder="Project Inquiry"
                 />
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
+                <label htmlFor="message" className="block mb-2 text-sm font-medium">
                   Message
                 </label>
                 <textarea
@@ -222,10 +228,14 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors resize-none"
+                  className="w-full px-4 py-3 transition-colors border rounded-lg resize-none bg-white/5 border-white/10 focus:outline-none focus:border-primary"
                   placeholder="Tell me about your project..."
                 />
               </motion.div>
+
+              {error && (
+                <div className="text-sm text-red-400">{error}</div>
+              )}
 
               <motion.div variants={itemVariants}>
                 <motion.button
@@ -233,14 +243,14 @@ const Contact = () => {
                   disabled={isSubmitting || submitted}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center w-full gap-2 px-8 py-4 font-semibold text-white transition-all rounded-lg bg-gradient-to-r from-primary-color to-secondary-color hover:shadow-lg hover:shadow-primary-color/50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                        className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                        className="w-5 h-5 border-2 rounded-full border-white/30 border-t-white"
                       />
                       Sending...
                     </>

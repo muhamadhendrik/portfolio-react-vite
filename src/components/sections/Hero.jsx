@@ -1,11 +1,15 @@
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, ArrowRight, Code2, Terminal, Braces, Rocket } from 'lucide-react';
+import { useProfile } from '../../hooks/useProfile';
 
 const Hero = () => {
+  const { profile, loading, error } = useProfile();
+
+  // Fallback to default data while loading or on error
   const socialLinks = [
-    { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Mail, href: 'mailto:hello@example.com', label: 'Email' },
+    { icon: Github, href: profile?.github_url || '#', label: 'GitHub' },
+    { icon: Linkedin, href: profile?.linkedin_url || '#', label: 'LinkedIn' },
+    { icon: Mail, href: `mailto:${profile?.email || 'hello@example.com'}`, label: 'Email' },
     { icon: Code2, href: '#', label: 'Code' },
   ];
 
@@ -28,6 +32,14 @@ const Hero = () => {
       transition: { duration: 0.5, ease: 'easeOut' },
     },
   };
+
+  if (loading) {
+    return (
+      <section id="home" className="relative flex items-center justify-center min-h-screen pt-20 md:pt-10">
+        <div className="text-center">Loading...</div>
+      </section>
+    );
+  }
 
   return (
     <section id="home" className="relative flex items-center justify-center min-h-screen pt-20 overflow-hidden md:pt-10">
@@ -61,22 +73,21 @@ const Hero = () => {
               className="mb-6 text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl"
             >
               Hi, I'm{' '}
-              <span className="gradient-text">Muhamad Hendrik</span>
+              <span className="gradient-text">{profile?.name || 'Muhamad Hendrik'}</span>
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
               className="mb-6 text-xl text-gray-400 sm:text-2xl md:text-3xl"
             >
-              Full Stack Developer & Creative Technologist
+              {profile?.title || 'Full Stack Developer & Creative Technologist'}
             </motion.p>
 
             <motion.p
               variants={itemVariants}
               className="max-w-xl mb-8 text-base text-gray-500 sm:text-lg"
             >
-              I craft beautiful, performant web experiences with modern technologies.
-              Passionate about clean code and innovative solutions.
+              {profile?.bio || 'I craft beautiful, performant web experiences with modern technologies. Passionate about clean code and innovative solutions.'}
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col justify-center gap-4 mb-10 sm:flex-row lg:justify-start">
@@ -84,7 +95,7 @@ const Hero = () => {
                 href="#projects"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center justify-center gap-2 px-8 py-4 font-semibold transition-all rounded-full group bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/50"
+                className="flex items-center justify-center gap-2 px-8 py-4 font-semibold text-white transition-all rounded-full group bg-gradient-to-r from-primary-color to-secondary-color hover:shadow-lg hover:shadow-primary-color/50"
               >
                 View My Work
                 <ArrowRight className="transition-transform group-hover:translate-x-1" size={20} />

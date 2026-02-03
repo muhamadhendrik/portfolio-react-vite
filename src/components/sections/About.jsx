@@ -1,29 +1,29 @@
 import { motion } from 'framer-motion';
 import { Code, Users, Zap, TrendingUp } from 'lucide-react';
+import { useFeatures } from '../../hooks/useFeatures';
+
+// Map icon names to lucide-react components
+const iconMap = {
+  Code,
+  Users,
+  Zap,
+  TrendingUp,
+  Target: ({ size }) => <span style={{ fontSize: size }}>🎯</span>,
+  Lightbulb: ({ size }) => <span style={{ fontSize: size }}>💡</span>,
+  Rocket: ({ size }) => <span style={{ fontSize: size }}>🚀</span>,
+  Award: ({ size }) => <span style={{ fontSize: size }}>🏆</span>,
+  Briefcase: ({ size }) => <span style={{ fontSize: size }}>💼</span>,
+  Star: ({ size }) => <span style={{ fontSize: size }}>⭐</span>,
+  Heart: ({ size }) => <span style={{ fontSize: size }}>❤️</span>,
+  Crown: ({ size }) => <span style={{ fontSize: size }}>👑</span>,
+  Flame: ({ size }) => <span style={{ fontSize: size }}>🔥</span>,
+  Gem: ({ size }) => <span style={{ fontSize: size }}>💎</span>,
+  Shield: ({ size }) => <span style={{ fontSize: size }}>🛡️</span>,
+  Sword: ({ size }) => <span style={{ fontSize: size }}>⚔️</span>,
+};
 
 const About = () => {
-  const features = [
-    {
-      icon: Code,
-      title: 'Clean Code',
-      description: 'Writing maintainable, scalable, and well-documented code following best practices.',
-    },
-    {
-      icon: Users,
-      title: 'Team Player',
-      description: 'Collaborating effectively with cross-functional teams to deliver exceptional results.',
-    },
-    {
-      icon: Zap,
-      title: 'Problem Solver',
-      description: 'Approaching challenges with creative solutions and out-of-the-box thinking.',
-    },
-    {
-      icon: TrendingUp,
-      title: 'Result Oriented',
-      description: 'Focused on delivering high-quality solutions that meet business objectives.',
-    },
-  ];
+  const { features, loading: featuresLoading } = useFeatures();
 
   const skills = [
     { name: 'Frontend Development', level: 95 },
@@ -124,7 +124,7 @@ const About = () => {
                       whileInView={{ width: `${skill.level}%` }}
                       transition={{ duration: 1, delay: index * 0.1 }}
                       viewport={{ once: true }}
-                      className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
+                      className="h-full bg-gradient-to-r from-primary-color to-secondary-color rounded-full"
                     />
                   </div>
                 </motion.div>
@@ -141,22 +141,31 @@ const About = () => {
           viewport={{ once: true }}
           className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          {features.map((feature) => (
-            <motion.div
-              key={feature.title}
-              variants={itemVariants}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="glass-card p-6 text-center group"
-            >
-              <motion.div
-                className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-              >
-                <feature.icon size={32} className="text-primary" />
-              </motion.div>
-              <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
-              <p className="text-gray-400 text-sm">{feature.description}</p>
-            </motion.div>
-          ))}
+          {featuresLoading ? (
+            <p className="text-center col-span-4">Loading features...</p>
+          ) : features.length === 0 ? (
+            <p className="text-center col-span-4 text-gray-400">No features found</p>
+          ) : (
+            features.map((feature) => {
+              const IconComponent = iconMap[feature.icon] || Code;
+              return (
+                <motion.div
+                  key={feature.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="glass-card p-6 text-center group"
+                >
+                  <motion.div
+                    className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-color/20 to-secondary-color/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+                  >
+                    <IconComponent size={32} className="text-white" />
+                  </motion.div>
+                  <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
+                  <p className="text-gray-400 text-sm">{feature.description}</p>
+                </motion.div>
+              );
+            })
+          )}
         </motion.div>
       </div>
     </section>

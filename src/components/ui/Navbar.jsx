@@ -30,7 +30,7 @@ const Navbar = () => {
         scrolled ? 'bg-darker/80 backdrop-blur-lg shadow-lg' : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <motion.a
             href="#home"
@@ -42,7 +42,7 @@ const Navbar = () => {
           </motion.a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="items-center hidden space-x-8 md:flex">
             {navItems.map((item, index) => (
               <motion.a
                 key={item.name}
@@ -50,17 +50,17 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-gray-300 hover:text-white transition-colors relative group"
+                className="relative text-gray-300 transition-colors hover:text-white group"
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-secondary group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-color to-secondary-color group-hover:w-full transition-all duration-300" />
               </motion.a>
             ))}
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-white"
+            className="text-white md:hidden"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -81,7 +81,7 @@ const Navbar = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="block text-gray-300 hover:text-white transition-colors py-2"
+                className="block py-2 text-gray-300 transition-colors hover:text-white"
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
