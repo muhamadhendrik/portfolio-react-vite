@@ -45,7 +45,7 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-md px-4">
         <Card className="glass-card bg-white/5 border-white/20 backdrop-blur-xl">
           {/* Logo Icon */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mt-3 mb-6">
             <div className="relative">
               <div className="absolute inset-0 rounded-full opacity-50 bg-gradient-to-r from-primary-color to-secondary-color blur-xl"></div>
               <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
