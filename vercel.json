@@ -4,5 +4,11 @@
   "framework": "vite",
   "env": {
     "VITE_API_URL": "https://api-porto.muhamadhendrik.my.id/api"
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
