@@ -103,7 +103,7 @@ const Projects = () => {
                     }`}
                   >
                     <div className="text-5xl mb-4">{project.emoji}</div>
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary-color transition-colors">
                       {project.title}
                     </h3>
                     <p className="text-gray-400 text-sm mb-4 line-clamp-3">
@@ -179,7 +179,7 @@ const Projects = () => {
                             <Calendar size={14} /> {exp.period}
                           </span>
                         </div>
-                        <p className="text-primary font-semibold mb-3">{exp.company}</p>
+                        <p className="text-primary-color font-semibold mb-3">{exp.company}</p>
                         <p className="text-gray-400 mb-4">{exp.description}</p>
                         {exp.achievements && exp.achievements.length > 0 && (
                           <ul className="space-y-2">
@@ -190,9 +190,9 @@ const Projects = () => {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 + i * 0.1 }}
-                                className="text-gray-400 text-sm flex items-start gap-2"
+                                className="text-gray-300 text-sm flex items-start gap-2"
                               >
-                                <span className="text-primary mt-1">▹</span>
+                                <span className="text-primary-color mt-1">▹</span>
                                 {achievement}
                               </motion.li>
                             ))}
