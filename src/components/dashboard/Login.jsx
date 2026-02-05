@@ -30,7 +30,7 @@ export default function Login() {
   };
 
   return (
-    <div className="dark min-h-screen flex items-center justify-center bg-darker relative overflow-hidden">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden dark bg-darker">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute rounded-full top-1/4 left-1/4 w-96 h-96 bg-primary/20 blur-3xl animate-float" />
@@ -47,15 +47,15 @@ export default function Login() {
           {/* Logo Icon */}
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-color to-secondary-color blur-xl opacity-50 rounded-full"></div>
-              <div className="relative w-20 h-20 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full opacity-50 bg-gradient-to-r from-primary-color to-secondary-color blur-xl"></div>
+              <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
                 <Code2 size={40} className="text-primary" />
               </div>
             </div>
           </div>
 
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold gradient-text text-white">Admin Dashboard</CardTitle>
+            <CardTitle className="text-3xl font-bold text-white gradient-text">Admin Dashboard</CardTitle>
             <CardDescription className="text-gray-400 dark:text-gray-400">
               Sign in to manage your portfolio
             </CardDescription>
@@ -85,18 +85,18 @@ export default function Login() {
                 />
               </div>
               {error && (
-                <div className="text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg p-3 text-center">
+                <div className="p-3 text-sm text-center text-red-400 border rounded-lg bg-red-400/10 border-red-400/20">
                   {error}
                 </div>
               )}
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-primary-color to-secondary-color hover:opacity-90 text-white font-semibold shadow-lg shadow-primary/50"
+                className="w-full font-semibold text-white shadow-lg bg-gradient-to-r from-primary-color to-secondary-color hover:opacity-90 shadow-primary/50"
                 disabled={loading}
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 rounded-full border-white/30 border-t-white animate-spin"></div>
                     Signing in...
                   </span>
                 ) : (
@@ -107,21 +107,21 @@ export default function Login() {
                 )}
               </Button>
             </form>
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <div className="bg-white/5 rounded-lg p-4 text-center">
-                <p className="text-sm text-gray-400 mb-2">Default Credentials:</p>
+            {/* <div className="pt-6 mt-6 border-t border-white/10">
+              <div className="p-4 text-center rounded-lg bg-white/5">
+                <p className="mb-2 text-sm text-gray-400">Default Credentials:</p>
                 <div className="flex items-center justify-center gap-4 text-sm">
-                  <div className="bg-white/5 px-3 py-1 rounded border border-white/10">
+                  <div className="px-3 py-1 border rounded bg-white/5 border-white/10">
                     <span className="text-gray-400">Username:</span>
-                    <span className="ml-2 text-white font-mono">admin</span>
+                    <span className="ml-2 font-mono text-white">admin</span>
                   </div>
-                  <div className="bg-white/5 px-3 py-1 rounded border border-white/10">
+                  <div className="px-3 py-1 border rounded bg-white/5 border-white/10">
                     <span className="text-gray-400">Password:</span>
-                    <span className="ml-2 text-white font-mono">admin123</span>
+                    <span className="ml-2 font-mono text-white">admin123</span>
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </div>
